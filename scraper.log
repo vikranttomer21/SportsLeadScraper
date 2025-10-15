@@ -1,0 +1,49 @@
+2025-10-13 16:20:01,060 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-10-13 16:20:02,433 - INFO - Loaded 0 processed entities.
+2025-10-13 16:20:02,434 - INFO - --- STARTING PHASE 1: MAPPING ---
+2025-10-13 16:20:02,435 - INFO - Starting VISUAL Selenium search for: 'delhi football association'
+2025-10-13 16:20:02,436 - INFO - ====== WebDriver manager ======
+2025-10-13 16:20:02,996 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:20:03,216 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:20:03,430 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 16:20:12,047 - INFO - Visually clicking 'footballdelhi.com' at coordinates: (231, 192)
+2025-10-13 16:20:17,227 - INFO - Navigated to: https://www.footballdelhi.com/
+2025-10-13 16:20:23,545 - INFO - Mapping entities from anchor: https://www.footballdelhi.com/
+2025-10-13 16:20:24,176 - INFO - Found section header: 'Our Clubs'
+2025-10-13 16:20:24,176 - WARNING - Context-aware search found no entities. Falling back to generic search.
+2025-10-13 16:20:24,180 - INFO - Found 90 potential entities from https://www.footballdelhi.com/
+2025-10-13 16:20:30,962 - INFO - Starting VISUAL Selenium search for: 'gujarat state football association'
+2025-10-13 16:20:30,962 - INFO - ====== WebDriver manager ======
+2025-10-13 16:20:31,479 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:20:32,048 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:20:32,281 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 16:20:42,672 - INFO - Visually clicking 'https:/x.com/GujaratFootball' at coordinates: (199, 375)
+2025-10-13 16:20:49,371 - INFO - Navigated to: https://x.com/GujaratFootball?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor
+2025-10-13 16:20:55,635 - INFO - Mapping entities from anchor: https://x.com/GujaratFootball?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor
+2025-10-13 16:20:56,305 - WARNING - Context-aware search found no entities. Falling back to generic search.
+2025-10-13 16:20:56,306 - INFO - Found 0 potential entities from https://x.com/GujaratFootball?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor
+2025-10-13 16:21:06,036 - INFO - Starting VISUAL Selenium search for: 'delhi cricket league'
+2025-10-13 16:21:06,037 - INFO - ====== WebDriver manager ======
+2025-10-13 16:21:06,625 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:21:06,984 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:21:07,410 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 16:21:19,600 - INFO - Starting VISUAL Selenium search for: 'ahmedabad sports academies'
+2025-10-13 16:21:19,601 - INFO - ====== WebDriver manager ======
+2025-10-13 16:21:20,110 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:21:20,364 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:21:20,580 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 16:21:26,287 - INFO - Visually clicking 'https:/ahmedabadsportsacademy.com' at coordinates: (225, 831)
+2025-10-13 16:21:34,108 - INFO - Navigated to: https://ahmedabadsportsacademy.com/
+2025-10-13 16:21:40,351 - INFO - Mapping entities from anchor: https://ahmedabadsportsacademy.com/
+2025-10-13 16:21:42,891 - WARNING - Context-aware search found no entities. Falling back to generic search.
+2025-10-13 16:21:42,894 - INFO - Found 26 potential entities from https://ahmedabadsportsacademy.com/
+2025-10-13 16:21:51,867 - INFO - --- STARTING PHASE 2: QUALIFYING ---
+2025-10-13 16:21:51,867 - INFO - --- Qualifying 90 entities found from 'delhi football association' ---
+2025-10-13 16:21:51,868 - INFO - [1/90] Qualifying entity: 'Press Release'
+2025-10-13 16:21:51,868 - INFO - Starting VISUAL Selenium search for: 'Press Release official website'
+2025-10-13 16:21:51,868 - INFO - ====== WebDriver manager ======
+2025-10-13 16:21:52,392 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:21:52,632 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 16:21:52,868 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 16:22:00,804 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)': /session/8f481bd0c1afb5c015a714990614f353
+2025-10-13 16:22:04,873 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x0000021A37070050>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /session/8f481bd0c1afb5c015a714990614f353

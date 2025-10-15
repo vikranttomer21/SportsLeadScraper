@@ -1,0 +1,220 @@
+2025-10-13 17:03:47,777 - INFO - file_cache is only supported with oauth2client<4.0.0
+2025-10-13 17:03:49,232 - INFO - Fetching existing entities to prevent duplicates...
+2025-10-13 17:03:49,771 - INFO - Found 523 existing entities.
+2025-10-13 17:03:49,787 - INFO - --- Processing Category: 'Sports Federations' | Keyword: 'list of state sports associations Gujarat' ---
+2025-10-13 17:03:49,787 - INFO - Searching for anchor pages for: 'list of state sports associations Gujarat'
+2025-10-13 17:03:49,788 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:03:49,788 - INFO - ====== WebDriver manager ======
+2025-10-13 17:03:50,356 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:03:50,580 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:03:50,797 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:03:52,970 - INFO - Checking for consent pop-up...
+2025-10-13 17:03:56,074 - INFO - No consent pop-up found or handled.
+2025-10-13 17:03:56,153 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:04:02,446 - INFO - Skipping already processed anchor: https://sportsauthority.gujarat.gov.in/
+2025-10-13 17:04:02,447 - INFO - Skipping already processed anchor: https://sportsauthority.gujarat.gov.in/sportsinner?name=Athletics
+2025-10-13 17:04:02,448 - INFO - Skipping already processed anchor: https://www.justdial.com/Ahmedabad/Associations-Of-Sports/nct-10022541
+2025-10-13 17:04:02,449 - INFO - Mapping leads from page: https://www.scribd.com/document/772019447/Sports-Federation-Details
+2025-10-13 17:04:04,477 - INFO - Successfully saved 3 new leads.
+2025-10-13 17:04:11,775 - INFO - Mapping leads from page: https://en.wikipedia.org/wiki/Sports_in_Gujarat
+2025-10-13 17:04:13,608 - INFO - Successfully saved 6 new leads.
+2025-10-13 17:04:19,084 - INFO - --- Processing Category: 'Sports Federations' | Keyword: 'list of sports associations Delhi' ---
+2025-10-13 17:04:19,085 - INFO - Searching for anchor pages for: 'list of sports associations Delhi'
+2025-10-13 17:04:19,086 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:04:19,087 - INFO - ====== WebDriver manager ======
+2025-10-13 17:04:19,583 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:04:19,816 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:04:20,051 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:04:22,217 - INFO - Checking for consent pop-up...
+2025-10-13 17:04:25,294 - INFO - No consent pop-up found or handled.
+2025-10-13 17:04:25,349 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:04:31,561 - INFO - Skipping already processed anchor: https://www.justdial.com/Delhi/Associations-Of-Sports/nct-10022541
+2025-10-13 17:04:31,562 - INFO - Skipping already processed anchor: https://en.wikipedia.org/wiki/Category:Sports_clubs_and_teams_in_Delhi
+2025-10-13 17:04:31,563 - INFO - Skipping already processed anchor: https://yas.nic.in/sites/default/files/final_recognised_list_2016_updt26-9-16.PDF
+2025-10-13 17:04:31,564 - INFO - Skipping already processed anchor: https://www.justdial.com/Delhi/Sports-Clubs/nct-10448320
+2025-10-13 17:04:31,565 - INFO - Mapping leads from page: https://www.scribd.com/document/527837517/LIST-OF-SPORT-ACADEMIES-IN-DELHI
+2025-10-13 17:04:33,006 - INFO - Found leads, but they all already exist in the database.
+2025-10-13 17:04:38,611 - INFO - --- Processing Category: 'Sports Federations' | Keyword: 'district level sports federations Delhi NCR' ---
+2025-10-13 17:04:38,611 - INFO - Searching for anchor pages for: 'district level sports federations Delhi NCR'
+2025-10-13 17:04:38,611 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:04:38,611 - INFO - ====== WebDriver manager ======
+2025-10-13 17:04:39,135 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:04:39,373 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:04:39,611 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:04:42,721 - INFO - Checking for consent pop-up...
+2025-10-13 17:04:45,821 - INFO - No consent pop-up found or handled.
+2025-10-13 17:04:45,896 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:04:52,145 - INFO - Skipping already processed anchor: https://yas.nic.in/sports/list-of-recognised-national-sports-federations-for-the-year-2020-2021
+2025-10-13 17:04:52,146 - INFO - Skipping already processed anchor: https://indianathletics.in/
+2025-10-13 17:04:52,147 - INFO - Skipping already processed anchor: https://www.davsports.in/
+2025-10-13 17:04:52,148 - INFO - Skipping already processed anchor: https://daasport.com/
+2025-10-13 17:04:52,149 - INFO - Skipping already processed anchor: https://indianathletics.in/affiliated-units/
+2025-10-13 17:04:52,150 - INFO - --- Processing Category: 'Sports Leagues' | Keyword: 'local football leagues Delhi NCR' ---
+2025-10-13 17:04:52,151 - INFO - Searching for anchor pages for: 'local football leagues Delhi NCR'
+2025-10-13 17:04:52,152 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:04:52,153 - INFO - ====== WebDriver manager ======
+2025-10-13 17:04:52,655 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:04:52,988 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:04:53,323 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:04:55,648 - INFO - Checking for consent pop-up...
+2025-10-13 17:04:58,745 - INFO - No consent pop-up found or handled.
+2025-10-13 17:04:58,810 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:05:05,063 - INFO - Skipping already processed anchor: https://www.footballdelhi.com/
+2025-10-13 17:05:05,065 - INFO - Skipping already processed anchor: https://www.instagram.com/talncr/?hl=en
+2025-10-13 17:05:05,066 - INFO - Skipping already processed anchor: https://delhifootballclub.com/
+2025-10-13 17:05:05,067 - INFO - Skipping already processed anchor: https://en.wikipedia.org/wiki/Delhi_Football_League
+2025-10-13 17:05:05,068 - INFO - Skipping already processed anchor: https://www.justdial.com/Delhi/Football-Clubs/nct-10623474
+2025-10-13 17:05:05,069 - INFO - --- Processing Category: 'Sports Leagues' | Keyword: 'amateur cricket tournaments Gujarat' ---
+2025-10-13 17:05:05,069 - INFO - Searching for anchor pages for: 'amateur cricket tournaments Gujarat'
+2025-10-13 17:05:05,071 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:05:05,072 - INFO - ====== WebDriver manager ======
+2025-10-13 17:05:05,606 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:05:05,965 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:05:06,315 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:05:08,408 - INFO - Checking for consent pop-up...
+2025-10-13 17:05:11,485 - INFO - No consent pop-up found or handled.
+2025-10-13 17:05:11,545 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:05:17,755 - INFO - Skipping already processed anchor: https://www.shauryasports.com/
+2025-10-13 17:05:17,755 - INFO - Skipping already processed anchor: https://cricheroes.com/tournaments/1/Ahmedabad
+2025-10-13 17:05:17,755 - INFO - Skipping already processed anchor: https://www.t20gullycricket.com/
+2025-10-13 17:05:17,755 - INFO - Skipping already processed anchor: https://gujaratcricketleague.com/
+2025-10-13 17:05:17,756 - INFO - Skipping already processed anchor: https://gujaratcricketassociation.com/narendra-modi-stadium/gca-tournaments/
+2025-10-13 17:05:17,756 - INFO - --- Processing Category: 'Sports Leagues' | Keyword: 'state level kabaddi league Gujarat' ---
+2025-10-13 17:05:17,756 - INFO - Searching for anchor pages for: 'state level kabaddi league Gujarat'
+2025-10-13 17:05:17,757 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:05:17,758 - INFO - ====== WebDriver manager ======
+2025-10-13 17:05:18,285 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:05:18,639 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:05:19,010 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:05:20,912 - INFO - Checking for consent pop-up...
+2025-10-13 17:05:23,973 - INFO - No consent pop-up found or handled.
+2025-10-13 17:05:24,060 - INFO - Found 3 potential anchor sites.
+2025-10-13 17:05:30,292 - INFO - Skipping already processed anchor: https://www.prokabaddi.com/teams/gujarat-giants-profile-31/players
+2025-10-13 17:05:30,293 - INFO - Mapping leads from page: https://www.gujaratgiants.com/pro-kabaddi
+2025-10-13 17:05:35,374 - INFO - Successfully saved 1 new leads.
+2025-10-13 17:05:42,595 - INFO - Skipping already processed anchor: https://gujaratstatekabaddi.com/
+2025-10-13 17:05:42,596 - INFO - --- Processing Category: 'Sports Franchise Teams' | Keyword: 'teams in Gujarat state T20 league' ---
+2025-10-13 17:05:42,597 - INFO - Searching for anchor pages for: 'teams in Gujarat state T20 league'
+2025-10-13 17:05:42,598 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:05:42,600 - INFO - ====== WebDriver manager ======
+2025-10-13 17:05:43,123 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:05:43,477 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:05:43,811 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:05:45,616 - INFO - Checking for consent pop-up...
+2025-10-13 17:05:48,725 - INFO - No consent pop-up found or handled.
+2025-10-13 17:05:48,798 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:05:55,035 - INFO - Skipping already processed anchor: https://gujaratcricketleague.com/
+2025-10-13 17:05:55,036 - INFO - Mapping leads from page: https://www.cricket.com/news/saurashtra-pro-t20-league-2025-all-squads-tnpl-full-schedule-where-to-watch-live-streaming-telecast-timings-in-ist-fantasy-662025-1749179482219
+2025-10-13 17:06:02,808 - INFO - Mapping leads from page: https://www.cricbuzz.com/cricket-news/134811/gujarat-cricket-association-to-launch-t20-league-this-season-cricbuzzcom
+2025-10-13 17:06:03,855 - INFO - Successfully saved 16 new leads.
+2025-10-13 17:06:11,710 - INFO - Mapping leads from page: https://en.wikipedia.org/wiki/Gujarat_cricket_team
+2025-10-13 17:06:13,292 - INFO - Successfully saved 78 new leads.
+2025-10-13 17:06:21,144 - INFO - Mapping leads from page: https://cricheroes.com/state/1/gujarat-cricket-association/teams
+2025-10-13 17:06:21,425 - WARNING - Attempt 1/3 failed for https://cricheroes.com/state/1/gujarat-cricket-association/teams: 403 Client Error: Forbidden for url: https://cricheroes.com/state/1/gujarat-cricket-association/teams
+2025-10-13 17:06:26,674 - WARNING - Attempt 2/3 failed for https://cricheroes.com/state/1/gujarat-cricket-association/teams: 403 Client Error: Forbidden for url: https://cricheroes.com/state/1/gujarat-cricket-association/teams
+2025-10-13 17:06:31,943 - WARNING - Attempt 3/3 failed for https://cricheroes.com/state/1/gujarat-cricket-association/teams: 403 Client Error: Forbidden for url: https://cricheroes.com/state/1/gujarat-cricket-association/teams
+2025-10-13 17:06:36,944 - ERROR - Could not process https://cricheroes.com/state/1/gujarat-cricket-association/teams after 3 attempts.
+2025-10-13 17:06:42,938 - INFO - --- Processing Category: 'Sports Franchise Teams' | Keyword: 'Delhi state football league teams' ---
+2025-10-13 17:06:42,939 - INFO - Searching for anchor pages for: 'Delhi state football league teams'
+2025-10-13 17:06:42,940 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:06:42,942 - INFO - ====== WebDriver manager ======
+2025-10-13 17:06:43,445 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:06:43,698 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:06:43,926 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:06:46,088 - INFO - Checking for consent pop-up...
+2025-10-13 17:06:49,163 - INFO - No consent pop-up found or handled.
+2025-10-13 17:06:49,211 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:06:55,450 - INFO - Skipping already processed anchor: https://en.wikipedia.org/wiki/Delhi_Football_League
+2025-10-13 17:06:55,451 - INFO - Skipping already processed anchor: https://www.footballdelhi.com/
+2025-10-13 17:06:55,452 - INFO - Mapping leads from page: https://www.footballdelhi.com/all-clubs/
+2025-10-13 17:06:57,017 - INFO - Found leads, but they all already exist in the database.
+2025-10-13 17:07:03,022 - INFO - Mapping leads from page: https://theawayend.co/delhi-dsa-senior-division-league/
+2025-10-13 17:07:06,483 - INFO - Successfully saved 88 new leads.
+2025-10-13 17:07:13,645 - INFO - Mapping leads from page: https://www.instagram.com/footballdelhi/?hl=en
+2025-10-13 17:07:19,863 - INFO - --- Processing Category: 'Sports Franchise Teams' | Keyword: 'local basketball teams Ahmedabad' ---
+2025-10-13 17:07:19,863 - INFO - Searching for anchor pages for: 'local basketball teams Ahmedabad'
+2025-10-13 17:07:19,863 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:07:19,864 - INFO - ====== WebDriver manager ======
+2025-10-13 17:07:20,374 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:07:20,713 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:07:21,180 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:07:22,958 - INFO - Checking for consent pop-up...
+2025-10-13 17:07:26,028 - INFO - No consent pop-up found or handled.
+2025-10-13 17:07:36,403 - WARNING - Could not find results automatically.
+2025-10-13 17:07:58,067 - INFO - Resuming, waiting for results to load...
+2025-10-13 17:08:08,375 - ERROR - Still could not find links after manual intervention: Message: 
+
+2025-10-13 17:08:08,376 - INFO - Found 0 potential anchor sites.
+2025-10-13 17:08:14,621 - INFO - --- Processing Category: 'Events & IPs' | Keyword: 'upcoming marathons Ahmedabad 2025' ---
+2025-10-13 17:08:14,623 - INFO - Searching for anchor pages for: 'upcoming marathons Ahmedabad 2025'
+2025-10-13 17:08:14,624 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:08:14,625 - INFO - ====== WebDriver manager ======
+2025-10-13 17:08:15,125 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:08:15,351 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:08:15,563 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:08:17,443 - INFO - Checking for consent pop-up...
+2025-10-13 17:08:20,508 - INFO - No consent pop-up found or handled.
+2025-10-13 17:08:20,568 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:08:26,771 - INFO - Mapping leads from page: https://www.townscript.com/in/ahmedabad/marathon
+2025-10-13 17:08:32,815 - INFO - Mapping leads from page: https://www.ahmedabadmarathon.com/
+2025-10-13 17:08:33,297 - WARNING - Attempt 1/3 failed for https://www.ahmedabadmarathon.com/: 403 Client Error: Forbidden for url: https://www.ahmedabadmarathon.com/
+2025-10-13 17:08:38,576 - WARNING - Attempt 2/3 failed for https://www.ahmedabadmarathon.com/: 403 Client Error: Forbidden for url: https://www.ahmedabadmarathon.com/
+2025-10-13 17:08:43,831 - WARNING - Attempt 3/3 failed for https://www.ahmedabadmarathon.com/: 403 Client Error: Forbidden for url: https://www.ahmedabadmarathon.com/
+2025-10-13 17:08:48,832 - ERROR - Could not process https://www.ahmedabadmarathon.com/ after 3 attempts.
+2025-10-13 17:08:55,306 - INFO - Mapping leads from page: https://www.instagram.com/ahmdmarathon/?hl=en
+2025-10-13 17:09:03,902 - INFO - Mapping leads from page: https://www.olympics.com/en/news/ahmedabad-marathon-2025-date
+2025-10-13 17:09:05,091 - INFO - Successfully saved 12 new leads.
+2025-10-13 17:09:12,108 - INFO - Mapping leads from page: https://www.ahmedabadmarathon.com/en/race-categories/race-info
+2025-10-13 17:09:12,356 - WARNING - Attempt 1/3 failed for https://www.ahmedabadmarathon.com/en/race-categories/race-info: 403 Client Error: Forbidden for url: https://www.ahmedabadmarathon.com/en/race-categories/race-info
+2025-10-13 17:09:17,708 - WARNING - Attempt 2/3 failed for https://www.ahmedabadmarathon.com/en/race-categories/race-info: 403 Client Error: Forbidden for url: https://www.ahmedabadmarathon.com/en/race-categories/race-info
+2025-10-13 17:09:23,069 - WARNING - Attempt 3/3 failed for https://www.ahmedabadmarathon.com/en/race-categories/race-info: 403 Client Error: Forbidden for url: https://www.ahmedabadmarathon.com/en/race-categories/race-info
+2025-10-13 17:09:28,070 - ERROR - Could not process https://www.ahmedabadmarathon.com/en/race-categories/race-info after 3 attempts.
+2025-10-13 17:09:34,484 - INFO - --- Processing Category: 'Events & IPs' | Keyword: 'local sports events Delhi NCR' ---
+2025-10-13 17:09:34,487 - INFO - Searching for anchor pages for: 'local sports events Delhi NCR'
+2025-10-13 17:09:34,488 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:09:34,489 - INFO - ====== WebDriver manager ======
+2025-10-13 17:09:35,007 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:09:35,244 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:09:35,491 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:09:37,508 - INFO - Checking for consent pop-up...
+2025-10-13 17:09:40,563 - INFO - No consent pop-up found or handled.
+2025-10-13 17:09:40,618 - INFO - Found 5 potential anchor sites.
+2025-10-13 17:09:46,828 - INFO - Mapping leads from page: https://in.bookmyshow.com/explore/sports-national-capital-region-ncr
+2025-10-13 17:09:47,127 - WARNING - Attempt 1/3 failed for https://in.bookmyshow.com/explore/sports-national-capital-region-ncr: 403 Client Error: Forbidden for url: https://in.bookmyshow.com/explore/sports-national-capital-region-ncr
+2025-10-13 17:09:52,389 - WARNING - Attempt 2/3 failed for https://in.bookmyshow.com/explore/sports-national-capital-region-ncr: 403 Client Error: Forbidden for url: https://in.bookmyshow.com/explore/sports-national-capital-region-ncr
+2025-10-13 17:09:57,614 - WARNING - Attempt 3/3 failed for https://in.bookmyshow.com/explore/sports-national-capital-region-ncr: 403 Client Error: Forbidden for url: https://in.bookmyshow.com/explore/sports-national-capital-region-ncr
+2025-10-13 17:10:02,615 - ERROR - Could not process https://in.bookmyshow.com/explore/sports-national-capital-region-ncr after 3 attempts.
+2025-10-13 17:10:10,182 - INFO - Mapping leads from page: https://www.townscript.com/in/delhi/sports-fitness
+2025-10-13 17:10:17,879 - INFO - Mapping leads from page: https://allevents.in/new-delhi/sports
+2025-10-13 17:10:19,504 - INFO - Successfully saved 49 new leads.
+2025-10-13 17:10:25,909 - INFO - Mapping leads from page: http://dda.gov.in/sports/sports_activities
+2025-10-13 17:10:27,332 - INFO - Successfully saved 15 new leads.
+2025-10-13 17:10:32,974 - INFO - Mapping leads from page: https://www.instagram.com/freeeventindelhincr/?hl=en
+2025-10-13 17:10:39,525 - INFO - --- Processing Category: 'Events & IPs' | Keyword: '5k runs in Gujarat' ---
+2025-10-13 17:10:39,527 - INFO - Searching for anchor pages for: '5k runs in Gujarat'
+2025-10-13 17:10:39,528 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:10:39,529 - INFO - ====== WebDriver manager ======
+2025-10-13 17:10:40,031 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:10:40,247 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:10:40,459 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:10:42,324 - INFO - Checking for consent pop-up...
+2025-10-13 17:10:45,398 - INFO - No consent pop-up found or handled.
+2025-10-13 17:10:55,728 - WARNING - Could not find results automatically.
+2025-10-13 17:11:00,449 - INFO - Resuming, waiting for results to load...
+2025-10-13 17:11:10,901 - ERROR - Still could not find links after manual intervention: Message: 
+
+2025-10-13 17:11:10,902 - INFO - Found 0 potential anchor sites.
+2025-10-13 17:11:17,158 - INFO - --- Processing Category: 'Sports Facilities / Venues' | Keyword: 'list of sports complexes in Ahmedabad' ---
+2025-10-13 17:11:17,159 - INFO - Searching for anchor pages for: 'list of sports complexes in Ahmedabad'
+2025-10-13 17:11:17,160 - INFO - Using Chrome profile: C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 31
+2025-10-13 17:11:17,161 - INFO - ====== WebDriver manager ======
+2025-10-13 17:11:17,669 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:11:17,906 - INFO - Get LATEST chromedriver version for google-chrome
+2025-10-13 17:11:18,185 - INFO - Driver [C:\Users\USER\.wdm\drivers\chromedriver\win64\141.0.7390.76\chromedriver-win32/chromedriver.exe] found in cache
+2025-10-13 17:11:19,987 - INFO - Checking for consent pop-up...
+2025-10-13 17:11:23,100 - INFO - No consent pop-up found or handled.
+2025-10-13 17:11:33,532 - WARNING - Could not find results automatically.
+2025-10-13 17:11:36,657 - INFO - Resuming, waiting for results to load...
+2025-10-13 17:11:42,666 - WARNING - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ConnectionResetError(10054, 'An existing connection was forcibly closed by the remote host', None, 10054, None)': /session/9cad9b35464758898d160e5b67080af2
+2025-10-13 17:11:46,762 - WARNING - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000225C984F8A0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /session/9cad9b35464758898d160e5b67080af2
+2025-10-13 17:11:50,858 - WARNING - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000225C984F790>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it')': /session/9cad9b35464758898d160e5b67080af2
