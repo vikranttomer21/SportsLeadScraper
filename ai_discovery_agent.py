@@ -1,261 +1,399 @@
+# discovery_agent.py (L2 Filter Only, No Players, Expanded Delhi Missions)
 import os
-import gspread
-import google.generativeai as genai
+import re
+import json
 import time
 import random
-import json
+import gspread
+import google.generativeai as genai
+from urllib.parse import urlparse
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium_stealth import stealth
-from urllib.parse import urlparse
 
-# --- CONFIGURATION ---
-# IMPORTANT: It is highly recommended to delete any keys you have posted publicly and generate a new one.
-GEMINI_API_KEY = "AIzaSyC7CEWPaUX6XfxSMNax3JELEj6Mqxc1Nio"
+# -------------------- CONFIG --------------------
+# --- SECURITY: Load API Key Safely ---
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-GOOGLE_SHEETS_CREDENTIALS = 'service_account.json'
-SPREADSHEET_NAME = 'Sports Scraper'
-CHROME_PROFILE_PATH = r'C:\Users\USER\AppData\Local\Google\Chrome\User Data\Profile 32'
+GOOGLE_SHEETS_CREDENTIALS = "service_account.json"
+SPREADSHEET_NAME = "Sports Scraper"
+RAW_ENTITY_SHEET_NAME = "Extracted Raw Entities" # <-- This is its only output
 
-# --- SHEET CONFIGURATION ---
-INPUT_SHEET_NAME = "Master Entity Database"
-OUTPUT_SHEET_NAME = "Discovered Entities"
+# --- Use an isolated profile directory ---
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+SELENIUM_PROFILE_DIR = os.path.join(PROJECT_DIR, "SeleniumProfile")
 
-# --- CAMPAIGN 1: PROACTIVE DISCOVERY CONFIG ---
-MISSION_OBJECTIVES = [
-    "Find low-tier, amateur cricket leagues in Gujarat",
-    "Find community-focused, local football clubs in Delhi NCR",
-    "Find small, regional sports event organizers in Gujarat",
-    "Find non-professional basketball teams in Delhi NCR"
-]
+# --- Agent Behavior Config ---
 KEYWORDS_PER_MISSION = 5
-MAX_RESULTS_PER_KEYWORD = 5
+MAX_SOURCE_URLS_PER_KEYWORD = 3
+MAX_ENTITIES_PER_SOURCE = 15
+SCROLL_PAUSES = (0.8, 1.8)
+LONG_PAUSE = (2.5, 5.5)
+
+# --- ✅ EXPANDED Stage 1 Discovery Missions (Delhi Focus) ---
+DISCOVERY_MISSIONS = [
+    # --- Delhi NCR Missions ---
+    "Find directories of football clubs in Delhi NCR",
+    "Find member clubs of the Delhi Soccer Association (DSA)",
+    "Find participating teams in the Delhi Premier League (football)",
+    "Find lists of cricket academies affiliated with the DDCA (Delhi & District Cricket Association)",
+    "Find rosters or player lists for state-level basketball teams in Delhi",
+    "Find member academies of the Delhi Basketball Association",
+    "Find amateur and corporate cricket leagues in Delhi NCR",
+    "List of hockey clubs and academies in Delhi",
+    "Find directories of sports complexes and venues in New Delhi",
+    "Find lists of badminton academies in Noida and Gurgaon",
+
+    # --- Gujarat Missions ---
+    "Find lists of cricket teams playing in Gujarat leagues",
+    "Find lists of sports venues in Ahmedabad",
+    "Find affiliated clubs with the Gujarat State Football Association (GSFA)",
+    "Find cricket academies in Vadodara and Surat",
+    "Find lists of Khel Mahakumbh sports venues in Gujarat"
+]
+
 
 BLACKLIST_DOMAINS = [
     "google.com", "facebook.com", "instagram.com", "twitter.com", "linkedin.com",
     "youtube.com", "wikipedia.org", "medium.com", "quora.com", "blogspot.com",
-    "justdial.com", "indiamart.com", "zaubacorp.com", "sulekha.com"
+    "justdial.com", "indiamart.com", "zaubacorp.com", "sulekha.com",
+    "amazon.", "flipkart."
 ]
 
-# --- AUTHENTICATION & SETUP ---
+# -------------------- SETUP --------------------
+def safe_print(*args, **kwargs):
+    """Prevents print errors in some environments."""
+    try: print(*args, **kwargs)
+    except: pass
+
+# Configure Gemini AI
+if not GEMINI_API_KEY:
+    safe_print("❌ FATAL ERROR: GEMINI_API_KEY environment variable not set.")
+    exit()
 try:
     genai.configure(api_key=GEMINI_API_KEY)
-    print("✅ Gemini AI Brain configured successfully.")
-    
+    safe_print("✅ Gemini AI configured.")
+except Exception as e:
+     safe_print(f"❌ FATAL ERROR: Configuring Gemini failed: {e}")
+     exit()
+
+# Configure Google Sheets
+try:
     gc = gspread.service_account(filename=GOOGLE_SHEETS_CREDENTIALS)
     sh = gc.open(SPREADSHEET_NAME)
+
+    try:
+        raw_entity_sheet = sh.worksheet(RAW_ENTITY_SHEET_NAME)
+    except gspread.exceptions.WorksheetNotFound:
+        raw_entity_sheet = sh.add_worksheet(title=RAW_ENTITY_SHEET_NAME, rows="5000", cols="5")
     
-    input_sheet = sh.worksheet(INPUT_SHEET_NAME)
-    output_sheet = sh.worksheet(OUTPUT_SHEET_NAME)
-    
-    if output_sheet.row_count == 0 or output_sheet.cell(1, 1).value == '':
-        output_sheet.append_row(["Entity Name", "Category", "Official Website", "Socials", "Source URL"])
-        
-    saved_websites = {row[2].strip() for row in output_sheet.get_all_values()[1:] if len(row) > 2 and row[2]}
-    print(f"✅ Google Sheets connection successful. Found {len(saved_websites)} previously discovered entities.")
+    if raw_entity_sheet.row_count == 0 or raw_entity_sheet.cell(1, 1).value == '':
+        raw_entity_sheet.append_row(["Entity Name", "Type", "Source URL"])
+    safe_print(f"✅ Google Sheets connection successful. Ready to write to '{RAW_ENTITY_SHEET_NAME}'.")
 
 except Exception as e:
-    print(f"❌ FATAL ERROR DURING SETUP: {e}")
+    safe_print(f"❌ FATAL ERROR: GOOGLE SHEETS SETUP FAILED: {e}")
     exit()
 
-# --- THE AGENT'S "BRAIN" FUNCTIONS 🧠 ---
+# -------------------- UTILITIES --------------------
+def safe_parse_json_from_text(text: str):
+    if not text: return None
+    try: return json.loads(text)
+    except: pass
+    patterns = [r'```json\s*(\{.*?\})\s*```', r'(\{.*?\})', r'```json\s*(\[.*?\])\s*```', r'(\[.*?\])']
+    for p in patterns:
+        m = re.search(p, text, re.DOTALL)
+        if m:
+            blob = m.group(1)
+            try: return json.loads(blob)
+            except Exception: continue
+    safe_print("   - Warning: Could not parse JSON from AI response.")
+    return None
 
-def generate_search_keywords_with_ai(mission_objective: str):
-    """Strategist Brain: Generates search keywords for proactive discovery."""
-    print(f"\n  🧠 Strategist Brain activated for mission: '{mission_objective}'")
-    model = genai.GenerativeModel('gemini-2.5-flash')
-    prompt = f"""
-    You are a creative marketing strategist. Your task is to generate {KEYWORDS_PER_MISSION} effective Google search queries for the following mission. The queries must be natural and avoid jargon.
-
-    Mission Objective: "{mission_objective}"
-
-    Return JSON: {{"keywords": ["query1", "query2", ...]}}
-    """
+def is_blacklisted(url: str):
     try:
-        response = model.generate_content(prompt)
-        cleaned_response = response.text.strip().replace('```json', '').replace('```', '')
-        return json.loads(cleaned_response).get("keywords", [])
-    except Exception as e:
-        print(f"   - Strategist Brain Error: {e}")
-        return []
+        domain = urlparse(url).netloc.lower()
+        return domain and any(b in domain for b in BLACKLIST_DOMAINS)
+    except: return True
 
-def extract_entity_names_from_list_page(page_text: str):
-    """List Processor Brain with Integrated Translator."""
-    model = genai.GenerativeModel('gemini-2.5-flash')
+def random_human_pause(short=False):
+    if short: time.sleep(random.uniform(*SCROLL_PAUSES))
+    else: time.sleep(random.uniform(*LONG_PAUSE))
+
+# -------------------- SELENIUM HELPERS --------------------
+def make_driver():
+    options = webdriver.ChromeOptions()
+    safe_print(f"Using Selenium profile directory: {SELENIUM_PROFILE_DIR}")
+    options.add_argument(f"--user-data-dir={SELENIUM_PROFILE_DIR}")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--start-maximized")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36")
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option('useAutomationExtension', False)
+    try:
+        service = ChromeService(ChromeDriverManager().install())
+        driver = webdriver.Chrome(service=service, options=options)
+        stealth(driver, languages=["en-US", "en"], vendor="Google Inc.", platform="Win32",
+                webgl_vendor="Intel Inc.", renderer="Intel Iris OpenGL Engine", fix_hairline=True)
+        driver.set_page_load_timeout(45)
+        return driver
+    except Exception as e:
+        safe_print(f"❌ FATAL ERROR: Failed to initialize WebDriver: {e}")
+        safe_print(f"   - Try deleting the '{SELENIUM_PROFILE_DIR}' folder and running again.")
+        safe_print("   - Ensure Chrome is fully closed (check Task Manager).")
+        exit()
+
+def human_like_scroll(driver, max_scrolls=5):
+    try:
+        last_height = driver.execute_script("return document.body.scrollHeight")
+        for _ in range(random.randint(2, max_scrolls)):
+            driver.execute_script(f"window.scrollBy(0, {random.randint(300, 700)});")
+            random_human_pause(short=True)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        random_human_pause(short=True)
+        driver.execute_script("window.scrollTo(0, 0);")
+        random_human_pause(short=True)
+    except Exception as e:
+        safe_print(f"   - Scroll error: {e}")
+
+# -------------------- AI / GEMINI PROMPTS 🧠 --------------------
+
+def call_gemini_with_retry(model_name: str, prompt: any, is_vision=False):
+    model = genai.GenerativeModel(model_name)
+    for attempt in range(3):
+        try:
+            if is_vision:
+                response = model.generate_content(prompt)
+            else:
+                response = model.generate_content(prompt)
+            if response and response.text:
+                return response.text
+            else:
+                safe_print(f"   - AI Call Warning (Attempt {attempt+1}): Empty response received.")
+        except Exception as e:
+            safe_print(f"   - AI Call Error (Attempt {attempt+1}): {e}")
+            error_text = str(e).lower()
+            if "quota" in error_text or "limit" in error_text or "429" in error_text:
+                wait = 25 * (attempt + 1)
+                safe_print(f"   - Rate limit likely hit, waiting {wait}s...")
+                time.sleep(wait)
+            else:
+                time.sleep(3 * (attempt + 1))
+    safe_print(f"   - AI call failed after multiple retries for model {model_name}.")
+    return None
+
+def call_gemini_for_discovery_keywords(mission_objective: str):
+    """Strategist Brain: Generates keywords to find LISTS/DIRECTORIES."""
+    safe_print(f"  🧠 Strategist Brain: Generating discovery keywords for '{mission_objective}'")
     prompt = f"""
-    You are a data extraction bot and an expert multilingual translator. Your primary task is to analyze the provided text from a webpage to find sports entities (Teams, Leagues, Federations).
+    You are an expert market researcher and SEO strategist.
+    Your task is to brainstorm a list of {KEYWORDS_PER_MISSION} highly effective and diverse Google search queries to accomplish a specific mission.
+    Mission Objective: "{mission_objective}"
+    CRITICAL INSTRUCTIONS:
+    1.  Think Like a User: Generate queries that a real person looking for these services would type.
+    2.  Be Creative and Diverse: Provide a varied set of keywords. Do not just use simple variations.
+    3.  Use Actionable Terms: Focus on local and specific terms like 'tournament', 'club', 'academy', 'championship', 'trials', and city/neighborhood names.
+    4.  Avoid Jargon: Do not use corporate or abstract terms like 'non-IPL' or 'low-tier'.
+    5.  Format Output: The output must be a JSON object with a single key "keywords" which is a list of strings.
+    """
+    response_text = call_gemini_with_retry("gemini-2.5-flash", prompt)
+    parsed = safe_parse_json_from_text(response_text)
+    keywords = parsed.get("keywords", []) if parsed else []
+    safe_print(f"  💡 AI has generated {len(keywords)} strategic keywords.")
+    return keywords
+
+def call_gemini_to_extract_entities_from_page(page_text: str):
+    """
+    ✅ UPGRADED Analyst Brain:
+    Filters for ONLY Level 2 and IGNORES players.
+    """
+    safe_print("   🤖 Analyst Brain (L2 Filter Only, No Players) activated...")
+    
+    model = genai.GenerativeModel("gemini-2.5-flash")
+    
+    prompt = f"""
+    You are an expert sports business analyst. Your goal is to analyze the following webpage text and extract specific sports organizations that are **Level 2 ONLY**.
+
+    **Your Target Entities:**
+    - Leagues
+    - Teams
+    - Events
+    - Venues
+    - Federations
+    - Academies
+
+    **Performance Levels & Rules:**
+    - **Level 1 (REJECT):** Major national/international teams (e.g., 'Indian Cricket Team', 'Mumbai Indians') and major professional leagues (e.g., 'IPL', 'ISL').
+    - **Level 2 (KEEP):** State-level leagues, state associations, and major state/city teams (e.g., 'Gujarat State Football League', 'Delhi Cricket Association'). These are established organizations.
+    - **Level 3 (REJECT):** District-level leagues, prominent city clubs, and local academies/events.
+    - **Level 4 (REJECT):** Hyper-local, "gully" teams, or school teams.
+    - **PLAYERS (REJECT):** You MUST ignore all individual player names.
 
     **CRITICAL WORKFLOW:**
     1.  **Translate First:** If you find text in another language (like Hindi or Gujarati), first translate it to English.
-    2.  **Analyze the Translation:** Analyze the translated English text to find the entity names.
-    3.  **Extract English Names Only:** Your final output must only contain the English names of the entities.
-    4.  **IGNORE** all irrelevant administrative jargon (tenders, circulars), and navigation links.
-    5.  **Format Output:** Return a JSON object with a list of the final English names you found.
+    2.  **Analyze and Filter:** Analyze the translated English text.
+    3.  **Extract ONLY Level 2:** Your primary job is to **IGNORE** Level 1, Level 3, Level 4, and all **Players**. Only extract entities that match your Target Entities AND are **Level 2**.
+    4.  **IGNORE Garbage:** Also ignore all irrelevant text (tenders, circulars, news, navigation links).
+    5.  **Format Output:** Return a strict JSON object with a list of the qualified **Level 2** entities you found.
 
-    Example Response: {{"entity_names": ["State Sports Complex", "Khel Mahakumbh Center"]}}
+    Example Response:
+    {{"entities": [
+        {{"name": "Delhi Premier League", "type": "League"}},
+        {{"name": "Ahmedabad District Football Association", "type": "Federation"}}
+    ]}}
 
-    **Webpage Text to Analyze:** --- {page_text[:8000]} ---
+    **Webpage Text to Analyze:**
+    ---
+    {page_text[:10000]} 
+    ---
     """
-    try:
-        response = model.generate_content(prompt)
-        cleaned_response = response.text.strip().replace('```json', '').replace('```', '')
-        return json.loads(cleaned_response).get("entity_names", [])
-    except Exception as e:
-        print(f"   - Phase 1 Brain Error: {e}")
-        return []
+    response_text = call_gemini_with_retry("gemini-2.5-flash", prompt)
+    parsed = safe_parse_json_from_text(response_text)
+    entities = parsed.get("entities", []) if parsed else []
+    
+    if entities:
+        safe_print(f"    - AI Analyst found {len(entities)} QUALIFIED (L2) entities.")
+    else:
+        safe_print("    - AI Analyst found no qualified (L2) entities on this page.")
+    return entities
 
-def find_socials_with_vision(driver):
-    """Vision Brain: Uses a screenshot to find social media links."""
-    print("    - 📸 Taking screenshot for visual analysis...")
-    try:
-        screenshot_bytes = driver.get_screenshot_as_png()
-        image_part = {"mime_type": "image/png", "data": screenshot_bytes}
-        
-        prompt_text = """
-        Analyze this screenshot of a website. Find the full URLs for the company's official social media profiles (Facebook, Instagram, Twitter, LinkedIn).
-        Return a JSON object with a list of the URLs you found.
 
-        Example Response: {{"social_urls": ["https://www.instagram.com/team_name"]}}
-        """
-        model = genai.GenerativeModel('gemini-2.5-flash')
-        response = model.generate_content([prompt_text, image_part])
-        cleaned_response = response.text.strip().replace('```json', '').replace('```', '')
-        return json.loads(cleaned_response).get("social_urls", [])
-    except Exception as e:
-        print(f"   - Vision Brain Error: {e}")
-        return []
-
-# --- THE AGENT'S "BODY" 🤖 ---
-
+# -------------------- MAIN WORKFLOW (DISCOVERY ONLY) --------------------
 def pre_flight_check(driver):
-    """Pauses the script at the start for a one-time manual CAPTCHA solve."""
-    driver.get("https://www.google.com")
-    print("\n" + "="*60)
-    print(">>> 🛑 PRE-FLIGHT CHECK: ACTION REQUIRED 🛑 <<<")
-    print("The browser is now open. Please complete the following steps:")
-    print("  1. Solve any CAPTCHA that appears.")
-    print("  2. IMPORTANT: Ensure you are logged into your Google account.")
-    print("  3. Wait for the main Google search page to load.")
-    input(">>> Once ready, press Enter here to begin the mission...")
-    print("="*60 + "\n")
-    print("✅ Pre-flight check complete. Agent is now running autonomously.")
-
-def find_official_website(driver, entity_name: str):
-    """Uses Google to find the most likely official website for an entity name."""
-    print(f"   🕵️‍♂️ Searching for official website for '{entity_name}'...")
-    try:
-        search_query = f'"{entity_name}" official website'
-        driver.get(f"https://www.google.com/search?q={search_query.replace(' ', '+')}")
-        time.sleep(random.uniform(4, 6))
-        
-        links = driver.find_elements(By.CSS_SELECTOR, 'div.g a')
-        for link in links:
-            url = link.get_attribute('href')
-            if url and not any(domain in url for domain in BLACKLIST_DOMAINS):
-                if any(word.lower() in urlparse(url).netloc for word in entity_name.split()[:2]):
-                    print(f"   🎯 Found likely official site: {url}")
-                    return url
-        return "NA"
-    except Exception as e:
-        print(f"   - Error finding official website: {e}")
-        return "NA"
-
-def investigate_and_save_entity(driver, entity_name, category, source_url):
-    """A reusable 'detective' function that investigates an entity and saves it."""
-    print(f"\n  🕵️‍♂️ Investigating: '{entity_name}'")
-    
-    official_website = find_official_website(driver, entity_name)
-    
-    if official_website == "NA" or official_website in saved_websites:
-        if official_website != "NA": print("    - Website already discovered. Skipping.")
-        return
-    
-    socials = []
-    try:
-        driver.get(official_website)
-        time.sleep(random.uniform(4, 6))
-        socials = find_socials_with_vision(driver)
-    except Exception as e:
-        print(f"    - Could not visit official site or find socials: {e}")
-    
-    socials_str = ", ".join(socials) if socials else "NA"
-    output_sheet.append_row([entity_name, category, official_website, socials_str, source_url])
-    saved_websites.add(official_website)
-    print(f"  ✅ Saved to 'Discovered Entities': {entity_name} | {official_website} | Socials: {socials_str}")
+     """Pauses the script indefinitely for a one-time manual CAPTCHA solve."""
+     try:
+         driver.get("https://www.google.com")
+         safe_print("\n" + "="*60)
+         safe_print(">>> 🛑 PRE-FLIGHT CHECK: ACTION REQUIRED 🛑 <<<")
+         safe_print("The browser is now open in its DEDICATED profile.")
+         safe_print("Please complete the following:")
+         safe_print("  1. Solve any CAPTCHA that appears.")
+         safe_print("  2. IMPORTANT: Log into your PERSONAL @gmail.com account IN THIS BROWSER.")
+         safe_print("  3. Wait for the main Google search page to load.")
+         input(">>> Once ready, press Enter here to begin the mission...")
+         safe_print("="*60 + "\n")
+         safe_print("✅ Pre-flight check complete. Agent is now running autonomously.")
+     except Exception as e:
+         safe_print(f"Error during pre-flight check: {e}")
+         time.sleep(2)
 
 def main():
-    options = webdriver.ChromeOptions()
-    options.add_argument(f"user-data-dir={CHROME_PROFILE_PATH}")
-    options.add_argument("--disable-blink-features=AutomationControlled")
-    service = ChromeService(ChromeDriverManager().install())
-    driver = webdriver.Chrome(service=service, options=options)
-    stealth(driver, languages=["en-US", "en"], vendor="Google Inc.", platform="Win32",
-            webgl_vendor="Intel Inc.", renderer="Intel Iris OpenGL Engine", fix_hairline=True)
-
+    driver = make_driver()
     try:
-        # --- ONE-TIME MANUAL AUTHENTICATION STEP ---
         pre_flight_check(driver)
 
-        # --- CAMPAIGN 1: PROACTIVE DISCOVERY ---
-        print("\n--- LAUNCHING CAMPAIGN 1: PROACTIVE DISCOVERY ---")
-        for mission in MISSION_OBJECTIVES:
-            keywords = generate_search_keywords_with_ai(mission)
-            for keyword in keywords:
-                print(f"\n  Executing proactive search for: '{keyword}'")
-                driver.get(f"https://www.google.com/search?q={keyword.replace(' ', '+')}")
-                time.sleep(random.uniform(4, 6))
-                
-                links = driver.find_elements(By.CSS_SELECTOR, 'div.g a')
-                urls_to_investigate = []
-                for link in links:
-                    url = link.get_attribute('href')
-                    if url and not any(domain in url for domain in BLACKLIST_DOMAINS):
-                        urls_to_investigate.append(url)
-                
-                for url in list(dict.fromkeys(urls_to_investigate))[:MAX_RESULTS_PER_KEYWORD]:
-                     try:
-                        driver.get(url)
-                        time.sleep(3)
-                        entity_name_guess = driver.title.split('-')[0].split('|')[0].strip()
-                        if entity_name_guess:
-                            investigate_and_save_entity(driver, entity_name_guess, "Unknown", url)
-                     except Exception as e:
-                         print(f"    - Error investigating proactive URL {url}: {e}")
-
-        # --- CAMPAIGN 2: REACTIVE PROCESSING ---
-        print("\n\n--- LAUNCHING CAMPAIGN 2: PROCESSING MASTER DATABASE ---")
-        raw_data_rows = input_sheet.get_all_values()[1:]
-        print(f"  Found {len(raw_data_rows)} rows to process in '{INPUT_SHEET_NAME}'.")
+        # --- STAGE 1: ENTITY DISCOVERY ---
+        print("\n--- STARTING STAGE 1: ENTITY DISCOVERY ---")
         
-        for i, row in enumerate(raw_data_rows):
-            print(f"\n  Processing Master Database Row #{i+1}...")
-            if len(row) < 4 or not row[3].strip().startswith('http'):
-                print(f"    - Row #{i+1} is malformed or has no valid URL. Skipping.")
-                continue
-            
-            category, source_url = row[1], row[3]
-            print(f"    - Source URL: {source_url}")
-            
-            try:
-                driver.get(source_url)
-                time.sleep(random.uniform(3, 5))
-                page_text = driver.find_element(By.TAG_NAME, 'body').text
-                discovered_names = extract_entity_names_from_list_page(page_text)
-                print(f"    - Phase 1 Complete: Discovered {len(discovered_names)} potential English entity names.")
-                
-                for name in discovered_names:
-                    investigate_and_save_entity(driver, name, category, source_url)
-            except Exception as e:
-                print(f"    - Could not process source URL {source_url}: {e}")
-                continue
+        existing_raw_entities = set()
+        try:
+            all_raw_data = raw_entity_sheet.get_all_values()[1:]
+            for row in all_raw_data:
+                if row: existing_raw_entities.add((row[0].lower(), row[1].lower()))
+        except Exception as e:
+            safe_print(f" - Warning: Could not get existing raw entities: {e}")
 
+        safe_print(f" - Found {len(existing_raw_entities)} existing raw entities in the sheet.")
+        
+        new_entities_found_in_session = 0
+
+        for mission in DISCOVERY_MISSIONS:
+            keywords = call_gemini_for_discovery_keywords(mission)
+            if not keywords: continue
+
+            keywords = list(dict.fromkeys([k.strip() for k in keywords if k.strip()]))[:KEYWORDS_PER_MISSION]
+            safe_print(f"Mission: {mission} -> {len(keywords)} keywords")
+
+            for kw in keywords:
+                safe_print("\nSearching for lists/directories using keyword:", kw)
+                google_search_url = f"https://www.google.com/search?q={kw.replace(' ', '+')}"
+                try:
+                    driver.get(google_search_url)
+                    human_like_scroll(driver, max_scrolls=3)
+                    random_human_pause(short=True)
+
+                    source_urls_to_process = []
+                    safe_print("   - Attempting to find result links...")
+                    try:
+                        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "search")))
+                        h3_elements = driver.find_elements(By.CSS_SELECTOR, "div#search a h3")
+                        safe_print(f"   - Found {len(h3_elements)} potential link headings (h3 tags).")
+                        
+                        for h3 in h3_elements:
+                            try:
+                                link_element = h3.find_element(By.XPATH, "./..")
+                                href = link_element.get_attribute("href")
+                                if href and href.startswith("http") and not is_blacklisted(href):
+                                    if href not in source_urls_to_process:
+                                        source_urls_to_process.append(href)
+                            except Exception: continue
+                    except Exception as wait_err:
+                         safe_print(f"    - Error waiting for or finding search results: {wait_err}")
+
+                    safe_print(f" - Found {len(source_urls_to_process)} potential source pages to process.")
+                    if not source_urls_to_process:
+                        safe_print("   - No valid source URLs found for this keyword. Moving to next keyword.")
+                        random_human_pause()
+                        continue
+
+                    for source_url in source_urls_to_process[:MAX_SOURCE_URLS_PER_KEYWORD]:
+                        safe_print(f"   - Processing source page: {source_url}")
+                        try:
+                            driver.get(source_url)
+                            random_human_pause()
+                            page_text = driver.find_element(By.TAG_NAME, 'body').text
+                        except Exception as page_load_err:
+                             safe_print(f"     - Could not load page or extract text: {page_load_err}")
+                             continue
+
+                        entities_found = call_gemini_to_extract_entities_from_page(page_text)
+                        
+                        entities_to_save_to_sheet = []
+                        for entity in entities_found[:MAX_ENTITIES_PER_SOURCE]:
+                            name = entity.get("name")
+                            etype = entity.get("type")
+                            if name and etype:
+                                if (name.lower(), etype.lower()) not in existing_raw_entities:
+                                    entities_to_save_to_sheet.append([name, etype, source_url])
+                                    existing_raw_entities.add((name.lower(), etype.lower()))
+                                    new_entities_found_in_session += 1
+                        
+                        if entities_to_save_to_sheet:
+                            try:
+                                raw_entity_sheet.append_rows(entities_to_save_to_sheet, value_input_option='USER_ENTERED')
+                                safe_print(f"    - Saved {len(entities_to_save_to_sheet)} new raw entities to sheet.")
+                            except Exception as sheet_err:
+                                safe_print(f"    - Error saving raw entities to sheet: {sheet_err}")
+                        random_human_pause(short=True)
+                except Exception as e:
+                    safe_print(f"Search page processing error for keyword: {kw} - {e}")
+                random_human_pause()
+
+        safe_print(f"\n--- STAGE 1 (DISCOVERY) COMPLETE ---")
+        safe_print(f"--- Found {new_entities_found_in_session} new raw entities in this session. ---")
+
+    except KeyboardInterrupt:
+        safe_print("Interrupted by user — exiting.")
     except Exception as e:
-        print(f"A critical error occurred in the main process: {e}")
+        safe_print(f"MAIN ERROR: {e}")
+        import traceback
+        traceback.print_exc()
     finally:
-        print("\n--- All missions complete. Closing down. ---")
-        driver.quit()
+        safe_print("Closing driver...")
+        try:
+            if 'driver' in locals() and driver:
+                driver.quit()
+        except: pass
+        safe_print("Done.")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
